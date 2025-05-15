@@ -9,23 +9,25 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     </head>
     <body class="body-class">
-        <header class="container">
+        <header class="container mx-auto">
             @if (Route::has('login'))
-                <nav class="">
+                <nav class="mt-4">
                     @auth
                         <a
                             href="{{ url('/home') }}"
-                            class=""
+                            class="btn btn-primary"
                         >
                             Dashboard
                         </a>
                     @else
                         <a
                             href="{{ route('login') }}"
-                            class=""
+                            class="btn btn-primary"
                         >
                             Log in
                         </a>
@@ -33,7 +35,7 @@
                         @if (Route::has('register'))
                             <a
                                 href="{{ route('register') }}"
-                                class="">
+                                class="btn btn-primary">
                                 Register
                             </a>
                         @endif
@@ -43,6 +45,7 @@
         </header>
         <div class="">
             <main class="">
+
                 <h1> Image CDN and Converted </h1>
             </main>
         </div>
@@ -50,5 +53,9 @@
         @if (Route::has('login'))
             <div class="h-14.5 hidden lg:block"></div>
         @endif
+
+        <!-- Option 1: Bootstrap Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
     </body>
 </html>
