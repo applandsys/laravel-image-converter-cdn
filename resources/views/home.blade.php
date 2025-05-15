@@ -27,7 +27,7 @@
 
                     <div class="card shadow">
                         <div class="card-header text-center bg-primary text-white">
-                            <h4>Convert JPG to WebP</h4>
+                            <h4>Convert Image to WebP</h4>
                         </div>
                         <div class="card-body">
                             @if(session('success'))
@@ -65,6 +65,27 @@
             </div>
         </div>
 
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table  class="table">
+                <tr>
+                    <th>Image Link</th>
+                    <th>Date</th>
+                </tr>
+                @foreach($imageList as $img)
+                <tr>
+                    <td>Image Link</td>
+                    <td><a target="_blank" href="{{$url = url('/')}}/images/webp/{{$img->image_name}}">{{$url = url('/')}}/images/webp/{{$img->image_name}}</a></td>
+                </tr>
+                @endforeach
+            </table>
+        </div>
+        {{-- Pagination links --}}
+        <div>
+            {{ $imageList->links() }}
+        </div>
     </div>
 </div>
 @endsection
