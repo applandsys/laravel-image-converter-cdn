@@ -15,38 +15,38 @@ class ImageController extends Controller
     {
         $user = Auth::user();
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,jpg,png,gif,webp|max:6000',
+            'images' => 'required',
+            'images.*' => 'image|mimes:jpeg,jpg,png,gif,webp|max:6000',
         ]);
 
-        $image = $request->file('image');
+        $imageManager = new ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
+        $savedImages = [];
 
-        // Generate a unique filename
-        $uniqueName = Str::uuid()->toString(); // Generate a unique UUID
-        $webpName = $uniqueName . '.webp'; // Append the .webp extension
-        $webpPath = public_path('images/webp/' . $webpName);
+        foreach ($request->file('images') as $image) {
+            $uniqueName = Str::uuid()->toString() . '.webp';
+            $webpPath = public_path('images/webp/' . $uniqueName);
 
-        // Ensure directory exists
-        if (!file_exists(dirname($webpPath))) {
-            mkdir(dirname($webpPath), 0755, true);
+            if (!file_exists(dirname($webpPath))) {
+                mkdir(dirname($webpPath), 0755, true);
+            }
+
+            $imageManager->read($image->getPathname())
+                ->encode(new WebpEncoder(quality: 80))
+                ->save($webpPath);
+
+            // Save to DB
+            ImageList::create([
+                'user_id' => $user->id,
+                'image_name' => $uniqueName,
+            ]);
+
+            $savedImages[] = asset('images/webp/' . $uniqueName);
         }
 
-        // Create ImageManager instance with GD driver
-        $manager = new ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
-
-        // Convert and encode with WebpEncoder
-        $manager->read($image->getPathname())
-            ->encode(new WebpEncoder(quality: 80))
-            ->save($webpPath);
-
-        // Save image info to the database
-        ImageList::create([
-            'user_id' => $user->id,
-            'image_name' => $webpName,
-        ]);
-
         return redirect()->back()->with([
-            'success' => 'Image converted successfully!',
-            'webp_url' => asset('images/webp/' . $webpName),
+            'success' => 'Images converted successfully!',
+            'webp_urls' => $savedImages,
         ]);
     }
+
 }
